@@ -103,16 +103,6 @@ class StudentGroup(Document):
 		# frappe.msgprint(str(self))
 		# frappe.msgprint(str(employees))
 		return employees
-	
-	@frappe.whitelist()
-	def get_students_in_group(self):
-		students_list = []
-		for s in self.students:
-			student = frappe.get_doc("Student", s.student).as_dict()
-			student["user_id"] = student["student_email_id"]
-			students_list.append(student)
-		
-		return students_list
 
 	@frappe.whitelist()
 	def get_m365_members_on_server(self):
@@ -121,7 +111,6 @@ class StudentGroup(Document):
 			return m365_group.get_m365_members_on_server()
 		else:
 			return []
-	
 
 	@frappe.whitelist()
 	def get_seperated_members(self):
@@ -347,32 +336,3 @@ def fetch_students(doctype, txt, searchfield, start, page_len, filters):
 			tuple(["%%%s%%" % txt, "%%%s%%" % txt, start, page_len]),
 		)
 	
-def gen_mailnickname(student_group):
-	parts = student_group.split(" ")
-	abbr = "".join([p[0] for p in parts if p]).lower()
-	return abbr
-
-@frappe.whitelist()
-def create_m365_group(student_group,template):
-	"""Tạo mới M365 Group từ Student Group"""
-	if not student_group:
-		return {"success": False, "message": "Student Group is required."}
-	m365_group = frappe.get_doc({
-		"doctype": "M365 Groups",
-		"m365_group_name": student_group,
-		"enable":1,
-		"template": template
-	})
-	m365_group.insert(ignore_permissions=True)
-
-	frappe.db.set_value("Student Group", student_group,"m365_group",student_group)
-	frappe.db.commit()
-	m365_group.run_m365_groups_flow()
-	m365_group.create_team_for_m365_groups()
-
-	student_group_doctype = frappe.get_doc("Student Group", student_group)	
-	student = student_group_doctype.get_students_in_group()	
-	for s in student:
-		m365_group.add_user_to_m365(email=s["student_email_id"])
-	m365_group.save()	
-	return {"success": True, "message": f"M365 Group '{student_group}' created!", "name": m365_group.name}

@@ -154,7 +154,6 @@
   {
    "fieldname": "m365_group",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "M365 Group",
    "options": "M365 Groups"
   },
@@ -166,7 +165,7 @@
   {
    "fieldname": "erpnext_only_section",
    "fieldtype": "Section Break",
-   "label": "ERPNext Only Members"
+   "label": "ERPNext Only Employees"
   },
   {
    "fieldname": "erpnext_only_table_html",
@@ -195,7 +194,7 @@
   }
  ],
  "links": [],
- "modified": "2025-02-28 09:57:21.854705",
+ "modified": "2025-02-26 20:59:31.095807",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",

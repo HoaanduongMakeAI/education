@@ -74,7 +74,7 @@ frappe.ui.form.on('Student Group', {
 					reqd: 1
 					}
 				],
-				primary_action_label: 'OK',
+				primary_action_label: 'Xác nhận',
 				primary_action: function(values) {
 					// Xử lý khi nhấn nút "Xác nhận"
 					console.log("Giá trị nhận được:", values);
@@ -89,14 +89,13 @@ frappe.ui.form.on('Student Group', {
 							create_team:true
 						},
 						callback: function (r) {
-							frm.reload_doc();
+							// frm.reload_doc();
 						}
 					});
 					
-					
 					dialog.hide();
 				},
-				secondary_action_label: 'Cancel',
+				secondary_action_label: 'Từ chối',
 				secondary_action: function() {
 					// Xử lý khi nhấn nút "Từ chối"
 					dialog.hide();
@@ -112,6 +111,8 @@ frappe.ui.form.on('Student Group', {
 					freeze_message: "<h4>Please wait while we are creating M365 Group...</h4>",
 					args:{
 						doc: frm.doc,
+						name: values.name,
+						template: values.template,
 						create_team:true
 					},
 					callback: function (r) {
